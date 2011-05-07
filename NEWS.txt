@@ -1,0 +1,10 @@
+News
+====
+
+0.1
+---
+
+*Release date: 08-May-2011*
+
+* Initial release
+
