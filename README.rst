@@ -11,6 +11,7 @@ Installation
 ------------
 
 Use easy_install or pip::
+
     pip install py7file
 
 Source Code: http://github.com/titusz/py7file
