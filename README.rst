@@ -39,8 +39,8 @@ Here some hopefully self explaining examples of Py7File usage::
 
     # Unzip and Rezip
     zfile = Py7File('a_file.zip')
-    zfile.unzip() # creates a subfolder a_file with contents of zipfile
-    zfile.rezip() # repackages subfolder a_file to a_file.zip
+    zfile.unzip() # creates a folder a_file_unzipped with contents of zipfile
+    zfile.rezip() # repackages subfolder a_file_unzipped to a_file.zip
     
 See test_py7file.py for more examples.
 

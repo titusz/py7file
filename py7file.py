@@ -36,9 +36,6 @@ class Py7File(object):
             self._filepath = unicode(file_or_path)
         else:
             raise TypeError('Need a valid file object or path!')
-        # for now we only handle files that do  have a file extension
-        if not '.' in os.path.basename(self._filepath):
-            raise TypeError('Py7File only handles files with an extension')
 
     @property
     def filepath(self):
@@ -68,12 +65,12 @@ class Py7File(object):
     @property
     def zipdir(self):
         """Absolute path to folder for unzipped version of referenced file."""
-        return os.path.join(self.location, self.trunc + '/')
+        return os.path.join(self.location, self.trunc + '_unzipped')
 
     def get_backups(self):
         """Return a sorted list of available backups of the referenced file."""
         return sorted(glob(os.path.join(self.location, (self.trunc +
-                                    "_backup_" + "*." + self.extension))))
+                                    "_backup_" + "*" + self.extension))))
 
     def __eq__(self, other):
         """Compare files based on md5 hash"""
@@ -86,12 +83,19 @@ class Py7File(object):
         """Create and return a backup with auto incremented version."""
 
         version = 1
-        out_path = os.path.join(self.location, u"{0}{1}{2:03d}.{3}".format(
-                            self.trunc, '_backup_', version, self.extension))
+        out_path = os.path.join(self.location, u"{0}{1}{2:03d}".format(
+                            self.trunc, '_backup_', version))
+
+        if len(self.extension):
+            out_path += '.' + self.extension
+
         while os.path.isfile(out_path):
             version += 1
-            out_path = os.path.join(self.location, u"{0}{1}{2:03d}.{3}".format(
-                            self.trunc, '_backup_', version, self.extension))
+            out_path = os.path.join(self.location, u"{0}{1}{2:03d}".format(
+                            self.trunc, '_backup_', version))
+            if len(self.extension):
+                out_path += '.' + self.extension
+
         self.copy(out_path)
         return Py7File(out_path)
 
@@ -117,7 +121,6 @@ class Py7File(object):
         This deletes the file that the current Py7File object references.
         So it mutates itself to reference the new file and also returns self.
         """
-        #TODO fix for working with path and file destinations
         if secure and os.path.isfile(dest):
             raise IOError('Destination file already exists')
         else:
@@ -137,7 +140,7 @@ class Py7File(object):
     def delete_zip_folder(self):
         """Delete eventual unzipped folder"""
         if os.path.isdir(self.zipdir):
-            shutil.rmtree(os.path.join(self.location, self.trunc))
+            shutil.rmtree(self.zipdir)
 
     def get_mimeptype(self):
         """Return mimetype of the file."""
@@ -160,8 +163,7 @@ class Py7File(object):
         return os.path.getsize(self.filepath)
 
     def unzip(self):
-        """Unzip the file to "file.trunk" named subfolder."""
-        #TODO fix to work with files that have no extension
+        """Unzip the file to [filebane]_unzipped named subfolder."""
         zip_file = zipfile.ZipFile(self.filepath)
         try:
             zip_file.extractall(self.zipdir)
@@ -204,12 +206,12 @@ class Py7File(object):
 
         the_file.seek(0)
         try:
-            BUFFER = 1024
+            bsize = 1024
             while 1:
-                fragment = the_file.read(BUFFER)
+                fragment = the_file.read(bsize)
                 if '\0' in fragment:
                     return True
-                if len(fragment) < BUFFER:
+                if len(fragment) < bsize:
                     break
         finally:
             the_file.close()

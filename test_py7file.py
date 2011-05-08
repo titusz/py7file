@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import codecs
 import os
+import shutil
 from py7file import Py7File
 import zipfile
 try:
@@ -44,12 +45,20 @@ class Py7FileTest(unittest.TestCase):
         zip_file.writestr('subfolder/file_in_subfolder.txt', 'just a testfile')
         zip_file.close()
 
+        #Create test zipfile without extension
+        self.test_file_zip_noext = os.path.join(self.root,'zipfilenoext')
+        zip_file = zipfile.ZipFile(self.test_file_zip_noext, 'w', zipfile.ZIP_DEFLATED)
+        zip_file.writestr('file_in_root.txt', 'just a testfile')
+        zip_file.writestr('subfolder/file_in_subfolder.txt', 'just a testfile')
+        zip_file.close()
+
     def tearDown(self):
         os.remove(self.test_file)
         os.remove(self.test_file_utf8)
         os.remove(self.test_file_noext)
         os.remove(self.test_file_zip)
         os.remove(self.test_file_utf16)
+        os.remove(self.test_file_zip_noext)
 
     @property
     def test_object(self):
@@ -74,7 +83,7 @@ class Py7FileTest(unittest.TestCase):
         self.assertEqual(Py7File(self.test_file_utf8).filepath,
                          self.test_file_utf8)
         self.assertEqual(Py7File(self.test_file_zip).extension, 'zip')
-        self.assertRaises(TypeError, Py7File, self.test_file_noext)
+        self.assertEqual(Py7File(self.test_file_noext).extension, '')
 
     def test_backup(self):
         test_file = Py7File(self.test_file)
@@ -151,11 +160,20 @@ class Py7FileTest(unittest.TestCase):
     def test_zip(self):
         the_file = Py7File(self.test_file_zip)
         the_file.unzip()
-        self.assertTrue(os.path.isdir('zip_test'))
-        self.assertTrue((os.path.isfile('zip_test/file_in_root.txt')))
+        self.assertTrue(os.path.isdir('zip_test_unzipped'))
+        self.assertTrue((os.path.isfile('zip_test_unzipped/file_in_root.txt')))
         the_file.rezip()
         self.assertTrue(os.path.exists(self.test_file_zip))
-        self.assertFalse(os.path.isdir('zip_test'))
+        self.assertFalse(os.path.isdir('zip_test_unzipped'))
+
+    def test_zip_noext(self):
+        the_file = Py7File(self.test_file_zip_noext)
+        the_file.unzip()
+        self.assertTrue(os.path.isdir('zipfilenoext_unzipped'))
+        self.assertTrue((os.path.isfile('zipfilenoext_unzipped/file_in_root.txt')))
+        the_file.rezip()
+        self.assertTrue(os.path.exists(self.test_file_zip))
+        self.assertFalse(os.path.isdir('zipfilenoext_unzipped'))
 
     def test_special_chars(self):
         the_file = Py7File(self.test_file_utf8)
@@ -176,8 +194,16 @@ class Py7FileTest(unittest.TestCase):
         self.assertNotEqual(the_file, different_file)
         identical_file.delete()
 
+    def test_no_extension(self):
+        the_file = Py7File(self.test_file_noext)
+        self.assertEqual(the_file.get_mimeptype(), None)
+        backup1 = the_file.backup()
+        backup2 = the_file.backup()
+        self.assertEqual(backup1.filename, the_file.filename + '_backup_001')
+        self.assertEqual(backup2.filename, the_file.filename + '_backup_002')
+        the_file.delete_backups()
+        self.assertFalse(backup1.exists())
+        self.assertFalse(backup2.exists())
+
 if __name__ == "__main__":
     unittest.main()
-    
-
-        
