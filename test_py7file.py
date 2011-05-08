@@ -205,5 +205,12 @@ class Py7FileTest(unittest.TestCase):
         self.assertFalse(backup1.exists())
         self.assertFalse(backup2.exists())
 
+    def test_is_zip_file(self):
+        self.assertTrue(Py7File(self.test_file_zip).is_zip_file())
+        self.assertTrue(Py7File(self.test_file_zip_noext).is_zip_file())
+        self.assertFalse(Py7File(self.test_file).is_zip_file())
+        self.assertFalse(Py7File(self.test_file_utf16).is_zip_file())
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -216,3 +216,7 @@ class Py7File(object):
         finally:
             the_file.close()
         return False
+
+    def is_zip_file(self):
+        """Return true if the referenced file is a zip file"""
+        return zipfile.is_zipfile(self.filepath)
