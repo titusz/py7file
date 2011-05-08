@@ -66,11 +66,11 @@ class Py7File(object):
 
     @property
     def zipdir(self):
-        """Absolut path to folder for unzipped version of referenced file"""
+        """Absolute path to folder for unzipped version of referenced file."""
         return os.path.join(self.location, self.trunc + '/')
 
     def get_backups(self):
-        """Return a sorted list of available backups of the referenced file"""
+        """Return a sorted list of available backups of the referenced file."""
         return sorted(glob(os.path.join(self.location, (self.trunc +
                                     "_backup_" + "*." + self.extension))))
 
@@ -95,7 +95,7 @@ class Py7File(object):
     def copy(self, dest, secure=True):
         """Copy file to existing destination directory or filepath.
 
-        :returns Py7File: for copied object
+        Returns a PyFile object for the copied file
         """
         if secure and os.path.isfile(dest):
             raise IOError('Destination file already exists')
@@ -107,8 +107,9 @@ class Py7File(object):
         """Move file to existing destination directory or filepath.
 
         This deletes the file that the current Py7File object references.
-        So it mutates itself to reference the new file and returns self.
+        So it mutates itself to reference the new file and also returns self.
         """
+        #TODO fix for working with path and file destinations
         if secure and os.path.isfile(dest):
             raise IOError('Destination file already exists')
         else:
@@ -147,11 +148,12 @@ class Py7File(object):
         return md5_caldulator.hexdigest()
 
     def get_filesize(self):
-        """Return the size, in bytes, of path."""
+        """Return the size of referenced file in bytes."""
         os.path.getsize(self.filepath)
 
     def unzip(self):
-        """Unzip the file to file.trunk named subfolder."""
+        """Unzip the file to "file.trunk" named subfolder."""
+        #TODO fix to work with files that have no extension
         zip_file = zipfile.ZipFile(self.filepath)
         try:
             zip_file.extractall(self.zipdir)
