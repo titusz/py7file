@@ -168,6 +168,13 @@ class Py7FileTest(unittest.TestCase):
         self.assertFalse(Py7File(self.test_file_utf16).is_binary())
         self.assertTrue(Py7File(self.test_file_zip).is_binary())
 
+    def test_comparison(self):
+        the_file = Py7File(self.test_file)
+        identical_file = the_file.copy('to_compare.file')
+        different_file = Py7File(self.test_file_zip)
+        self.assertEqual(the_file, identical_file)
+        self.assertNotEqual(the_file, different_file)
+        identical_file.delete()
 
 if __name__ == "__main__":
     unittest.main()

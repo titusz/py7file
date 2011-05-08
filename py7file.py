@@ -75,6 +75,13 @@ class Py7File(object):
         return sorted(glob(os.path.join(self.location, (self.trunc +
                                     "_backup_" + "*." + self.extension))))
 
+    def __eq__(self, other):
+        """Compare files based on md5 hash"""
+        if not isinstance(other, Py7File):
+            return NotImplemented
+        else:
+            return self.get_md5() == other.get_md5()
+
     def backup(self):
         """Create and return a backup with auto incremented version."""
 
