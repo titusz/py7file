@@ -78,11 +78,11 @@ class Py7File(object):
         """Create and return a backup with auto incremented version."""
 
         version = 1
-        out_path = os.path.join(self.location, u"{}{}{:03d}.{}".format(
+        out_path = os.path.join(self.location, u"{0}{1}{2:03d}.{3}".format(
                             self.trunc, '_backup_', version, self.extension))
         while os.path.isfile(out_path):
             version += 1
-            out_path = os.path.join(self.location, u"{}{}{:03d}.{}".format(
+            out_path = os.path.join(self.location, u"{0}{1}{2:03d}.{3}".format(
                             self.trunc, '_backup_', version, self.extension))
         self.copy(out_path)
         return Py7File(out_path)

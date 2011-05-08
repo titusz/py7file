@@ -134,7 +134,7 @@ class Py7FileTest(unittest.TestCase):
 
     def test_get_md5(self):
         hash = self.test_object.get_md5()
-        self.assertIsInstance(hash, str)
+        self.assertTrue(isinstance(hash, str))
         self.assertEqual(len(hash), 32)
 
     def test_zip(self):
