@@ -1,6 +1,13 @@
 News
 ====
 
+0.2
+---
+
+*Release date: 08-May-2011*
+
+* Fixed for tests on OSX
+
 0.1
 ---
 
