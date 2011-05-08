@@ -6,7 +6,7 @@ Py7File - Simple file handling with python
 and intuitive high-level api.*
 
 | **Think:** os.path, shutil etc. via object based method access.
-| **Author:** *Titusz Titusz <tp at py7 de>*
+| **Author:** *Titusz <tp at py7 de>*
 | **Source Code**: http://github.com/titusz/py7file
 | **License**: BSD
 
