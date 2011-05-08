@@ -1,5 +1,5 @@
 *.pyc
-
+.gitignore
 .idea
 
 .installed.cfg
