@@ -14,7 +14,7 @@ from glob import glob
 
 import os
 import shutil
-import md5
+import hashlib
 import mimetypes
 import zipfile
 
@@ -137,7 +137,7 @@ class Py7File(object):
     def get_md5(self):
         """Return the MD5 hash of the file."""
         file_obj = open(self.filepath, 'rb')
-        md5_caldulator = md5.new()
+        md5_caldulator = hashlib.md5()
         while True:
             data = file_obj.read(128)
             if not data:
