@@ -24,8 +24,13 @@ class Py7FileTest(unittest.TestCase):
 
         # An utf-8 endoded textfile with special chars in filename and content
         self.test_file_utf8 = os.path.join(self.root, u'mußt be german.txt')
-        with codecs.open(self.test_file_utf8, 'w', 'UTF-8') as utf8file:
+        with codecs.open(self.test_file_utf8, 'w', 'utf8') as utf8file:
             utf8file.write(u'Indeed this mußt be german...')
+
+        # An utf-16 endoded textfile with special chars in filename and content
+        self.test_file_utf16 = os.path.join(self.root, u'test_file_utf16.txt')
+        with codecs.open(self.test_file_utf16, 'w', 'utf16') as utf16file:
+            utf16file.write(u'Indeed this mußt be german...')
 
         # File without extension
         self.test_file_noext = os.path.join(self.root, 'noextfile')
@@ -44,7 +49,7 @@ class Py7FileTest(unittest.TestCase):
         os.remove(self.test_file_utf8)
         os.remove(self.test_file_noext)
         os.remove(self.test_file_zip)
-
+        os.remove(self.test_file_utf16)
 
     @property
     def test_object(self):
@@ -156,6 +161,13 @@ class Py7FileTest(unittest.TestCase):
         the_file = Py7File(self.test_file_utf8)
         the_file.backup()
         the_file.cleanup()
+
+    def test_is_binary(self):
+        self.assertFalse(Py7File(self.test_file).is_binary())
+        self.assertFalse(Py7File(self.test_file_utf8).is_binary())
+        self.assertFalse(Py7File(self.test_file_utf16).is_binary())
+        self.assertTrue(Py7File(self.test_file_zip).is_binary())
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -10,6 +10,7 @@ operations on files
 
 
 """
+import codecs
 from glob import glob
 
 import os
@@ -180,3 +181,29 @@ class Py7File(object):
     def exists(self):
         """Check if referenced file still exists."""
         return os.path.exists(self.filepath)
+
+    def is_binary(self):
+        """Return true if the referenced file is binary.
+
+        @attention: not 100% reliable
+
+        """
+        the_file = open(self.filepath, 'rb')
+
+        # Check for Byte-Order-Marker
+        fragment = the_file.read(128)
+        if fragment.startswith(codecs.BOM):
+            return False
+
+        the_file.seek(0)
+        try:
+            BUFFER = 1024
+            while 1:
+                fragment = the_file.read(BUFFER)
+                if '\0' in fragment:
+                    return True
+                if len(fragment) < BUFFER:
+                    break
+        finally:
+            the_file.close()
+        return False
