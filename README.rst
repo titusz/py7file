@@ -8,7 +8,9 @@ and intuitive high-level api.*
 **Think:** os.path, shutil etc. via object based method access.
 
 **Author:** *Titusz (tp@py7.de)*
+
 **Source Code**: http://github.com/titusz/py7file
+
 **License**: BSD
 
 Installation
