@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 """
-A module wrapping and unifying the python stdlib file handling modules and
+A module wrapping and unifying the python standard lib file handling modules and
 built-in functions with a simple and intuitive high-level api.
 Think: os.path, shutil, file, open, ... with convenient method based access.
 
@@ -24,7 +24,7 @@ class Py7File(object):
     """A file on a filesystem with simple handling"""
 
     def __init__(self, file_or_path):
-        """Initialize a Py7File by passing  a filepath or file object."""
+        """Initialize a Py7File by passing  a file path or file object."""
 
         if (isinstance(file_or_path, file) and hasattr(file_or_path, 'name')
                 and os.path.isfile(file_or_path.name)):
@@ -35,7 +35,7 @@ class Py7File(object):
             self._filepath = unicode(file_or_path)
         else:
             raise TypeError('Need a valid file object or path!')
-        # for now we only handle files that do  have a filextension
+        # for now we only handle files that do  have a file extension
         if not '.' in os.path.basename(self._filepath):
             raise TypeError('Py7File only handles files with an extension')
 
@@ -51,7 +51,7 @@ class Py7File(object):
 
     @property
     def location(self):
-        """Absolut path to the folder of the referenced file"""
+        """Absolute path to the folder of the referenced file"""
         return os.path.abspath(os.path.dirname(self._filepath))
 
     @property
