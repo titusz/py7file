@@ -128,6 +128,7 @@ class Py7FileTest(unittest.TestCase):
         self.assertTrue(os.path.isfile('delete_me.txt'))
         to_delete.delete()
         self.assertFalse(os.path.isfile('delete_me.txt'))
+        self.assertFalse(to_delete.exists())
 
     def test_get_mimetype(self):
         self.assertEqual('text/plain', self.test_object.get_mimeptype())

@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 """
-A module wrapping and unifying the python standard lib file handling modules and
-built-in functions with a simple and intuitive high-level api.
+A module wrapping and unifying the python standard lib file handling modules
+and built-in functions with a simple and intuitive high-level api.
 Think: os.path, shutil, file, open, ... with convenient method based access.
 
 The Py7File class allows to do simple copy, move, backup, delete, unzip/rezip
@@ -118,7 +118,7 @@ class Py7File(object):
             return self
 
     def delete(self):
-        """Delete file from disk."""
+        """Delete file from disk but keep object data for eventual restore."""
         os.remove(self.filepath)
 
     def delete_backups(self):
@@ -161,7 +161,7 @@ class Py7File(object):
             zip_file.close()
 
     def rezip(self):
-        """Re-Zip a previously unzipped file and remove unzipped folder"""
+        """Re-Zip a previously unzipped file and remove unzipped folder."""
         fzip = zipfile.ZipFile(self.filepath, 'w', zipfile.ZIP_DEFLATED)
         if not os.path.isdir(self.zipdir):
             raise IOError('No "{}" folder to rezip'.format(self.trunc))
@@ -173,6 +173,10 @@ class Py7File(object):
         self.delete_zip_folder()
 
     def cleanup(self):
-        """Remove backups and unzipped files"""
+        """Remove backups and unzipped files."""
         self.delete_backups()
         self.delete_zip_folder()
+
+    def exists(self):
+        """Check if referenced file still exists."""
+        return os.path.exists(self.filepath)
