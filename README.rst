@@ -18,7 +18,7 @@ Source Code: http://github.com/titusz/py7file
 
 Usage
 -----
-Here some hopefully self explaining examples of the Py7File usage::
+Here some hopefully self explaining examples of Py7File usage::
 
     from py7file import Py7File
 
