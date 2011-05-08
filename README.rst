@@ -5,13 +5,10 @@ Py7File - Simple file handling with python
 *Py7File wraps and unifies the python stdlib file handling modules with a simple
 and intuitive high-level api.*
 
-**Think:** os.path, shutil etc. via object based method access.
-
-**Author:** *Titusz (tp@py7.de)*
-
-**Source Code**: http://github.com/titusz/py7file
-
-**License**: BSD
+| **Think:** os.path, shutil etc. via object based method access.
+| **Author:** *Titusz Titusz <tp at py7 de>*
+| **Source Code**: http://github.com/titusz/py7file
+| **License**: BSD
 
 Installation
 ------------
