@@ -149,7 +149,7 @@ class Py7File(object):
 
     def get_filesize(self):
         """Return the size of referenced file in bytes."""
-        os.path.getsize(self.filepath)
+        return os.path.getsize(self.filepath)
 
     def unzip(self):
         """Unzip the file to "file.trunk" named subfolder."""

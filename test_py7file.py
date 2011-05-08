@@ -137,6 +137,11 @@ class Py7FileTest(unittest.TestCase):
         self.assertTrue(isinstance(hash, str))
         self.assertEqual(len(hash), 32)
 
+    def test_get_filesize(self):
+        the_file = Py7File(self.test_file)
+        self.assertTrue(the_file.get_filesize())
+        self.assertTrue(isinstance(the_file.get_filesize(), long))
+
     def test_zip(self):
         the_file = Py7File(self.test_file_zip)
         the_file.unzip()

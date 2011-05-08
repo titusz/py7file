@@ -1,6 +1,6 @@
-##########################################
+==========================================
 Py7File - Simple file handling with python
-##########################################
+==========================================
 
 *Py7File wraps and unifies the python stdlib file handling modules with a simple
 and intuitive high-level api.*
