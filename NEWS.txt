@@ -1,6 +1,13 @@
 News
 ====
 
+0.5
+---
+
+*Release date: 09-May-2011*
+
+* fixed filepath property to always give absolute path
+
 0.4
 ---
 
