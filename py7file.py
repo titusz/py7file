@@ -19,7 +19,6 @@ import hashlib
 import mimetypes
 import zipfile
 
-
 class Py7File(object):
 
     """A file on a filesystem with simple handling"""
@@ -66,6 +65,15 @@ class Py7File(object):
     def zipdir(self):
         """Absolute path to folder for unzipped version of referenced file."""
         return os.path.join(self.location, self.trunc + '_unzipped')
+
+    def read(self, size=None):
+        """Read file, close and return data."""
+        with open(self.filepath) as the_file:
+            if size:
+                data = the_file.read(size)
+            else:
+                data = the_file.read()
+        return data
 
     def get_backups(self):
         """Return a sorted list of available backups of the referenced file."""

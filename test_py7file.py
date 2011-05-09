@@ -211,6 +211,9 @@ class Py7FileTest(unittest.TestCase):
         self.assertFalse(Py7File(self.test_file).is_zip_file())
         self.assertFalse(Py7File(self.test_file_utf16).is_zip_file())
 
+    def test_read(self):
+        self.assertIsInstance(Py7File(self.test_file).read(), str)
+        self.assertEqual(Py7File(self.test_file).read(), 'This is a file for testing')
 
 if __name__ == "__main__":
     unittest.main()
