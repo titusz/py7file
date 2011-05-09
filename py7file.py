@@ -29,18 +29,18 @@ class Py7File(object):
 
         if (isinstance(file_or_path, file) and hasattr(file_or_path, 'name')
                 and os.path.isfile(file_or_path.name)):
-            self._filepath = unicode(file_or_path.name)
+            self._filepath = file_or_path.name
             # Lets have a clean slate
             file_or_path.close()
         elif os.path.isfile(file_or_path):
-            self._filepath = unicode(file_or_path)
+            self._filepath = file_or_path
         else:
             raise TypeError('Need a valid file object or path!')
 
     @property
     def filepath(self):
         """Absolute path to the referenced file."""
-        return self._filepath
+        return unicode(os.path.abspath(self._filepath))
 
     @property
     def filename(self):
@@ -60,7 +60,7 @@ class Py7File(object):
     @property
     def trunc(self):
         """Filename of the referenced file without extension."""
-        return os.path.splitext(self._filepath)[0]
+        return os.path.splitext(self.filename)[0]
 
     @property
     def zipdir(self):
