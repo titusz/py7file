@@ -154,7 +154,7 @@ class Py7File(object):
     def delete_zip_folder(self):
         """Delete eventual unzipped folder"""
         if os.path.isdir(self.zipdir):
-            shutil.rmtree(self.zipdir)
+            shutil.rmtree(self.zipdir, ignore_errors=True)
 
     def get_mimeptype(self):
         """Return mimetype of the file."""
