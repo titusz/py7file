@@ -1,6 +1,14 @@
 News
 ====
 
+0.5.1
+-----
+
+*Release date: 10-May-2011*
+
+* basic read method added
+* improved file comparison
+
 0.5
 ---
 
