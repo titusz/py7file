@@ -191,6 +191,9 @@ class Py7FileTest(unittest.TestCase):
         identical_file = the_file.copy('to_compare.file')
         different_file = Py7File(self.test_file_zip)
         self.assertEqual(the_file, identical_file)
+        self.assertEqual(the_file, os.path.abspath('to_compare.file'))
+        self.assertEqual(the_file, u'to_compare.file')
+        self.assertEqual(the_file, file('to_compare.file'))
         self.assertNotEqual(the_file, different_file)
         identical_file.delete()
 

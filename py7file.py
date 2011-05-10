@@ -20,6 +20,7 @@ import mimetypes
 import zipfile
 import filecmp
 
+
 class Py7File(object):
 
     """A file on a filesystem with simple handling"""
@@ -87,7 +88,7 @@ class Py7File(object):
             return filecmp.cmp(self.filepath, other.filepath, shallow=False)
         elif isinstance(other, file):
             return filecmp.cmp(self.filepath, other.name, shallow=False)
-        elif isinstance(other,(str, unicode)) and os.path.isfile(other):
+        elif isinstance(other, (str, unicode)) and os.path.isfile(other):
             return filecmp.cmp(self.filepath, other, shallow=False)
         else:
             return NotImplemented
