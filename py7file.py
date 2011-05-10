@@ -18,6 +18,7 @@ import shutil
 import hashlib
 import mimetypes
 import zipfile
+import filecmp
 
 class Py7File(object):
 
@@ -81,11 +82,15 @@ class Py7File(object):
                                     "_backup_" + "*" + self.extension))))
 
     def __eq__(self, other):
-        """Compare files based on md5 hash"""
-        if not isinstance(other, Py7File):
-            return NotImplemented
+        """Compare files"""
+        if isinstance(other, Py7File):
+            return filecmp.cmp(self.filepath, other.filepath, shallow=False)
+        elif isinstance(other, file):
+            return filecmp.cmp(self.filepath, other.name, shallow=False)
+        elif isinstance(other,(str, unicode)) and os.path.isfile(other):
+            return filecmp.cmp(self.filepath, other, shallow=False)
         else:
-            return self.get_md5() == other.get_md5()
+            return NotImplemented
 
     def backup(self):
         """Create and return a backup with auto incremented version."""
