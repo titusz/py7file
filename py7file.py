@@ -83,7 +83,11 @@ class Py7File(object):
                                     "_backup_" + "*" + self.extension))))
 
     def __eq__(self, other):
-        """Compare files"""
+        """Compare file contents with other file.
+
+        Accepts Py7File objects, file objects and strings that are a path to
+        another file.
+        """
         if isinstance(other, Py7File):
             return filecmp.cmp(self.filepath, other.filepath, shallow=False)
         elif isinstance(other, file):
