@@ -6,7 +6,7 @@ README = open(os.path.join(here, 'README.rst')).read()
 NEWS = open(os.path.join(here, 'NEWS.txt')).read()
 
 
-version = '0.5.1'
+version = '0.5.2'
 
 setup(name='py7file',
     version=version,
@@ -26,7 +26,7 @@ setup(name='py7file',
       'Topic :: Software Development :: Libraries :: Python Modules',
       'Topic :: Utilities'
     ],
-    keywords='file copy move backup unzip open os.path shutil wrapper api',
+    keywords='file copy move backup unzip open os.path shutil wrapper api epub',
     author='Titusz',
     author_email='tp@py7.de',
     url='http://github.com/titusz/py7file',

@@ -69,10 +69,10 @@ class Py7File(object):
         return os.path.join(self.location, self.trunc + '_unzipped')
 
     def __repr__(self):
-        return "Py7File(r'{0}')".format(self.filepath)
+        return "{0}(r'{1}')".format(self.__class__.__name__, self.filepath)
 
     def __str__(self):
-        return "<Py7File> {0}".format(self.filename)
+        return "<{0}> {1}".format(self.__class__.__name__, self.filename)
 
     def __eq__(self, other):
         """Compare file contents with other file.
@@ -80,7 +80,7 @@ class Py7File(object):
         Accepts Py7File objects, file objects and strings that are a path to
         another file.
         """
-        if isinstance(other, Py7File):
+        if isinstance(other, (Py7File, EpubFile)):
             return filecmp.cmp(self.filepath, other.filepath, shallow=False)
         elif isinstance(other, file):
             return filecmp.cmp(self.filepath, other.name, shallow=False)
@@ -121,11 +121,11 @@ class Py7File(object):
                 out_path += '.' + self.extension
 
         self.copy(out_path)
-        return Py7File(out_path)
+        return self.__class__(out_path)
 
     def restore(self):
         """Restore referenced file from latest backup"""
-        latest_backup = Py7File(self.get_backups()[-1])
+        latest_backup = self.__class__(self.get_backups()[-1])
         latest_backup.copy(self.filepath)
 
     def copy(self, dest, secure=True):
@@ -137,7 +137,7 @@ class Py7File(object):
             raise IOError('Destination file already exists')
         else:
             shutil.copy(self.filepath, dest)
-            return Py7File(dest)
+            return self.__class__(dest)
 
     def move(self, dest, secure=True):
         """Move file to existing destination directory or filepath.

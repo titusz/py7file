@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 import codecs
 import os
-import shutil
-from py7file import Py7File
+from py7file import Py7File, EpubFile
 import zipfile
 try:
     import unittest2 as unittest
@@ -51,6 +50,9 @@ class Py7FileTest(unittest.TestCase):
         zip_file.writestr('file_in_root.txt', 'just a testfile')
         zip_file.writestr('subfolder/file_in_subfolder.txt', 'just a testfile')
         zip_file.close()
+
+        #Test ePub file
+        self.test_epub = os.path.join(self.root, 'test', 'test.epub')
 
     def tearDown(self):
         os.remove(self.test_file)
@@ -221,6 +223,15 @@ class Py7FileTest(unittest.TestCase):
     def test_repr(self):
         the_file = Py7File(self.test_file)
         self.assertEqual(the_file, eval(repr(the_file)))
+
+    def test_epub(self):
+        the_epub = EpubFile(self.test_epub)
+        copied_epub = the_epub.copy(os.path.join(self.root, 'test', 'test_copy.epub'))
+        copied_epub.unzip()
+        self.assertTrue(os.path.isfile(os.path.join(copied_epub.zipdir, 'mimetype')))
+        copied_epub.rezip()
+        self.assertTrue(zipfile.is_zipfile(copied_epub.filepath))
+        copied_epub.delete()
 
 if __name__ == "__main__":
     unittest.main()
