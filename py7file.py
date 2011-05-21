@@ -244,3 +244,40 @@ class Py7File(object):
     def is_zip_file(self):
         """Return true if the referenced file is a zip file"""
         return zipfile.is_zipfile(self.filepath)
+
+
+class EpubFile(Py7File):
+    """An ePub file with special rezip handling"""
+
+    def rezip(self):
+        """Re-Zip a previously unzipped epub and remove unzipped folder."""
+
+        exclude_files = ['.DS_Store', 'mimetype', 'iTunesMetadata.plist']
+        parent_dir, dir_to_zip = os.path.split(self.zipdir)
+
+        def trim(path):
+            """Prepare archive path"""
+            zip_path = path.replace(parent_dir, "", 1)
+            if parent_dir:
+                zip_path = zip_path.replace(os.path.sep, "", 1)
+            zip_path = zip_path.replace(dir_to_zip + os.path.sep, "", 1)
+            return zip_path
+
+        with zipfile.ZipFile(self.filepath, "w",
+                             compression=zipfile.ZIP_DEFLATED) as outfile:
+
+            # ePub Zips need uncompressed mimetype-file as first file
+            outfile.write(os.path.join(self.zipdir, 'mimetype'), 'mimetype',
+                          compress_type=0)
+
+            for root, dirs, files in os.walk(self.zipdir):
+                for file_name in files:
+                    if file_name in exclude_files:
+                        continue
+                    file_path = os.path.join(root, file_name)
+                    outfile.write(file_path, trim(file_path))
+                # Also add empty directories
+                if not files and not dirs:
+                    zip_info = zipfile.ZipInfo(trim(root) + "/")
+                    outfile.writestr(zip_info, "")
+        self.delete_zip_folder()
