@@ -263,21 +263,22 @@ class EpubFile(Py7File):
             zip_path = zip_path.replace(dir_to_zip + os.path.sep, "", 1)
             return zip_path
 
-        with zipfile.ZipFile(self.filepath, "w",
-                             compression=zipfile.ZIP_DEFLATED) as outfile:
+        outfile = zipfile.ZipFile(self.filepath, "w",
+                                  compression=zipfile.ZIP_DEFLATED)
 
-            # ePub Zips need uncompressed mimetype-file as first file
-            outfile.write(os.path.join(self.zipdir, 'mimetype'), 'mimetype',
-                          compress_type=0)
+        # ePub Zips need uncompressed mimetype-file as first file
+        outfile.write(os.path.join(self.zipdir, 'mimetype'), 'mimetype',
+                      compress_type=0)
 
-            for root, dirs, files in os.walk(self.zipdir):
-                for file_name in files:
-                    if file_name in exclude_files:
-                        continue
-                    file_path = os.path.join(root, file_name)
-                    outfile.write(file_path, trim(file_path))
-                # Also add empty directories
-                if not files and not dirs:
-                    zip_info = zipfile.ZipInfo(trim(root) + "/")
-                    outfile.writestr(zip_info, "")
+        for root, dirs, files in os.walk(self.zipdir):
+            for file_name in files:
+                if file_name in exclude_files:
+                    continue
+                file_path = os.path.join(root, file_name)
+                outfile.write(file_path, trim(file_path))
+            # Also add empty directories
+            if not files and not dirs:
+                zip_info = zipfile.ZipInfo(trim(root) + "/")
+                outfile.writestr(zip_info, "")
+        outfile.close()
         self.delete_zip_folder()
