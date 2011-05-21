@@ -233,5 +233,16 @@ class Py7FileTest(unittest.TestCase):
         self.assertTrue(zipfile.is_zipfile(copied_epub.filepath))
         copied_epub.delete()
 
+    def test_epub_file(self):
+        the_file = Py7File(self.test_epub)
+        copied_file = the_file.copy(os.path.join(self.root, 'test', 'test_copy.epub'))
+        epub_file_obj = file(copied_file.filepath)
+        the_epub = EpubFile(epub_file_obj)
+        the_epub.unzip()
+        self.assertTrue(os.path.isfile(os.path.join(the_epub.zipdir, 'mimetype')))
+        the_epub.rezip()
+        self.assertTrue(zipfile.is_zipfile(copied_file.filepath))
+        copied_file.delete()
+
 if __name__ == "__main__":
     unittest.main()
