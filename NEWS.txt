@@ -1,6 +1,14 @@
 News
 ====
 
+0.6
+-----
+
+*Release date: 21-May-2011*
+
+* new EpubFile class that suports epub packaging
+* enhancments for Py7File subclassing
+
 0.5.1
 -----
 
