@@ -7,6 +7,7 @@ and intuitive high-level api.*
 
 | **Think:** os.path, shutil etc. via object based method access.
 | **Author:** *Titusz <tp at py7 de>*
+| **PyPi:** http://pypi.python.org/pypi/py7file
 | **Source Code**: http://github.com/titusz/py7file
 | **License**: BSD
 
@@ -45,6 +46,8 @@ See test_py7file.py for more examples.
 
 Testing
 -------
+Py7File is tested against python 2.6 and 2.7
+
 To run the tests::
 
     python test_py7file.py

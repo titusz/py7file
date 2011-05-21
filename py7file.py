@@ -68,19 +68,11 @@ class Py7File(object):
         """Absolute path to folder for unzipped version of referenced file."""
         return os.path.join(self.location, self.trunc + '_unzipped')
 
-    def read(self, size=None):
-        """Read file, close and return data."""
-        with open(self.filepath) as the_file:
-            if size:
-                data = the_file.read(size)
-            else:
-                data = the_file.read()
-        return data
+    def __repr__(self):
+        return "Py7File(r'{0}')".format(self.filepath)
 
-    def get_backups(self):
-        """Return a sorted list of available backups of the referenced file."""
-        return sorted(glob(os.path.join(self.location, (self.trunc +
-                                    "_backup_" + "*" + self.extension))))
+    def __str__(self):
+        return "<Py7File> {0}".format(self.filename)
 
     def __eq__(self, other):
         """Compare file contents with other file.
@@ -96,6 +88,20 @@ class Py7File(object):
             return filecmp.cmp(self.filepath, other, shallow=False)
         else:
             return NotImplemented
+
+    def read(self, size=None):
+        """Read file, close and return data."""
+        with open(self.filepath) as the_file:
+            if size:
+                data = the_file.read(size)
+            else:
+                data = the_file.read()
+        return data
+
+    def get_backups(self):
+        """Return a sorted list of available backups of the referenced file."""
+        return sorted(glob(os.path.join(self.location, (self.trunc +
+                "_backup_" + "*" + self.extension))))
 
     def backup(self):
         """Create and return a backup with auto incremented version."""

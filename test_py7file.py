@@ -18,17 +18,17 @@ class Py7FileTest(unittest.TestCase):
 
         self.root = os.path.abspath(os.path.dirname(__file__))
 
-        # A normal textfile
+        # A normal text file
         self.test_file = os.path.join(self.root, 'testfile.txt')
         with open(self.test_file, 'w') as testfile:
             testfile.write('This is a file for testing')
 
-        # An utf-8 endoded textfile with special chars in filename and content
+        # An utf-8 encoded text file with special chars in filename and content
         self.test_file_utf8 = os.path.join(self.root, u'mußt be german.txt')
         with codecs.open(self.test_file_utf8, 'w', 'utf8') as utf8file:
             utf8file.write(u'Indeed this mußt be german...')
 
-        # An utf-16 endoded textfile with special chars in filename and content
+        # An utf-16 encoded text file with special chars in filename and content
         self.test_file_utf16 = os.path.join(self.root, u'test_file_utf16.txt')
         with codecs.open(self.test_file_utf16, 'w', 'utf16') as utf16file:
             utf16file.write(u'Indeed this mußt be german...')
@@ -217,6 +217,10 @@ class Py7FileTest(unittest.TestCase):
     def test_read(self):
         self.assertIsInstance(Py7File(self.test_file).read(), str)
         self.assertEqual(Py7File(self.test_file).read(), 'This is a file for testing')
+
+    def test_repr(self):
+        the_file = Py7File(self.test_file)
+        self.assertEqual(the_file, eval(repr(the_file)))
 
 if __name__ == "__main__":
     unittest.main()
