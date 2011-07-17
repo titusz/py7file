@@ -58,7 +58,7 @@ Alpha - Use at own risk...
 
 Background
 ----------
-As a started learning programming with python I found the different modules for
+As I started learning programming with python I found the different modules for
 handling files very confusing and cumbersome to use. While writing my first
 scripts I found myself writing os.path.join(...) way to often. I still
 keep mixing up os and shutil based file operations like copy, move, rename.
