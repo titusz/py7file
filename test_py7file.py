@@ -146,6 +146,12 @@ class Py7FileTest(unittest.TestCase):
         self.assertFalse(os.path.isfile('delete_me.txt'))
         self.assertFalse(to_delete.exists())
 
+    def test_get_sanitized_filename(self):
+        obj = Py7File(self.test_file_utf8)
+        self.assertEqual("mu_t_be_german.txt", obj.get_sanitized_filename())
+        obj = Py7File(unicode(self.test_file_utf8))
+        self.assertEqual("mu_t_be_german.txt", obj.get_sanitized_filename())
+
     def test_get_mimetype(self):
         self.assertEqual('text/plain', self.test_object.get_mimeptype())
 

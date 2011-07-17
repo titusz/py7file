@@ -1,6 +1,13 @@
 News
 ====
 
+0.7
+-----
+
+*Release date: 17-July-2011*
+
+* added new get_sanitized_filename method
+
 0.6
 -----
 

@@ -14,6 +14,7 @@ import codecs
 from glob import glob
 
 import os
+import re
 import shutil
 import hashlib
 import mimetypes
@@ -166,6 +167,31 @@ class Py7File(object):
         if os.path.isdir(self.zipdir):
             shutil.rmtree(self.zipdir, ignore_errors=True)
 
+    def get_sanitized_filename(self):
+        """Return a  portable and secure version of filename
+        credits: werkzeug.utils.secure_filename
+        """
+        codecs.register_error("replace_", self.replace_under_error_handler)
+        ascii_strip_re = re.compile(r'[^A-Za-z0-9_.-]')
+        windows_device_files = ('CON', 'AUX', 'COM1', 'COM2', 'COM3', 'COM4',
+                                'LPT1', 'LPT2', 'LPT3', 'PRN', 'NUL')
+
+        if isinstance(self.filename, unicode):
+            from unicodedata import normalize
+            filename = normalize('NFKD', self.filename).encode('ascii',
+                                                               'replace_')
+        for sep in os.path.sep, os.path.altsep:
+            if sep:
+                filename = self.filename.replace(sep, ' ')
+        filename = str(ascii_strip_re.sub('_', '_'.join(
+                       filename.split()))).strip('._')
+
+        if os.name == 'nt' and filename and \
+            filename.split('.')[0].upper() in windows_device_files:
+            filename = '_' + filename
+
+        return filename
+
     def get_mimeptype(self):
         """Return mimetype of the file."""
         return mimetypes.guess_type(self.filename)[0]
@@ -244,6 +270,10 @@ class Py7File(object):
     def is_zip_file(self):
         """Return true if the referenced file is a zip file"""
         return zipfile.is_zipfile(self.filepath)
+
+    def replace_under_error_handler(self, error):
+        """Handle encoding errors with '_' replacement"""
+        return u'_' * (error.end - error.start), error.end
 
 
 class EpubFile(Py7File):
