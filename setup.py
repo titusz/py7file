@@ -6,7 +6,7 @@ README = open(os.path.join(here, 'README.rst')).read()
 NEWS = open(os.path.join(here, 'NEWS.txt')).read()
 
 
-version = '0.7'
+version = '0.7.1'
 
 setup(name='py7file',
     version=version,
@@ -31,4 +31,5 @@ setup(name='py7file',
     author_email='tp@py7.de',
     url='http://github.com/titusz/py7file',
     license='BSD',
+    py_modules=['py7file']
 )

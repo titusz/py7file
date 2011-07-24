@@ -1,6 +1,13 @@
 News
 ====
 
+0.7.1
+-----
+
+*Release date: 24-July-2011*
+
+* fixed setup.py
+
 0.7
 -----
 
