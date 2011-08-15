@@ -1,6 +1,13 @@
 News
 ====
 
+0.7.2
+-----
+
+*Release date: 15-August-2011*
+
+* Added get_number() method for convenient work with numbered files.
+
 0.7.1
 -----
 

@@ -22,6 +22,11 @@ class Py7FileTest(unittest.TestCase):
         with open(self.test_file, 'w') as testfile:
             testfile.write('This is a file for testing')
 
+        # A file with numbered name
+        self.numbered_file = os.path.join(self.root, 'test_000026.txt')
+        with open(self.numbered_file, 'w') as testfile:
+            testfile.write('This is a numbered file for testing')
+
         # An utf-8 encoded text file with special chars in filename and content
         self.test_file_utf8 = os.path.join(self.root, u'mußt be german.txt')
         with codecs.open(self.test_file_utf8, 'w', 'utf8') as utf8file:
@@ -56,6 +61,7 @@ class Py7FileTest(unittest.TestCase):
 
     def tearDown(self):
         os.remove(self.test_file)
+        os.remove(self.numbered_file)
         os.remove(self.test_file_utf8)
         os.remove(self.test_file_noext)
         os.remove(self.test_file_zip)
@@ -249,6 +255,14 @@ class Py7FileTest(unittest.TestCase):
         the_epub.rezip()
         self.assertTrue(zipfile.is_zipfile(copied_file.filepath))
         copied_file.delete()
+
+    def test_get_number(self):
+        test_file_no_num = Py7File(self.test_file)
+        self.assertIsNone(test_file_no_num.get_number())
+        test_file_numbered = Py7File(self.numbered_file)
+        self.assertIsInstance(test_file_numbered.get_number(), int)
+        self.assertEqual(test_file_numbered.get_number(), 26)
+
 
 if __name__ == "__main__":
     unittest.main()

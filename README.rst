@@ -54,7 +54,9 @@ To run the tests::
 
 Status
 ------
-Alpha - Use at own risk...
+Well I am using this this file handling library quite extensivly myself and
+i got no complaints so far ;). Still please consider this Beta and
+use at your own risk...
 
 Background
 ----------

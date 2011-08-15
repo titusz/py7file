@@ -18,6 +18,7 @@ import re
 import shutil
 import hashlib
 import mimetypes
+import string
 import zipfile
 import filecmp
 
@@ -211,6 +212,15 @@ class Py7File(object):
     def get_filesize(self):
         """Return the size of referenced file in bytes."""
         return os.path.getsize(self.filepath)
+
+    def get_number(self):
+        """Scan filename for number. Return an integer or None"""
+        number = [n for n in self.trunc if n in string.digits]
+        number = ''.join(number)
+        if number:
+            return int(number)
+        else:
+            return None
 
     def unzip(self):
         """Unzip the file to [filebane]_unzipped named subfolder."""
