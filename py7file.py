@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
-
 """
+=======
+py7file
+=======
+
 A module wrapping and unifying the python standard lib file handling modules
 and built-in functions with a simple and intuitive high-level api.
 Think: os.path, shutil, file, open, ... with convenient method based access.
 
 The Py7File class allows to do simple copy, move, backup, delete, unzip/rezip
 operations on files
-
-
 """
 import codecs
 from glob import glob
@@ -25,11 +26,13 @@ import filecmp
 
 class Py7File(object):
 
-    """A file on a filesystem with simple handling"""
+    """
+    A file on a filesystem with many convenience mathods.
+
+    :param file_or_path: A path to a file or an actual file object.
+    """
 
     def __init__(self, file_or_path):
-        """Initialize a Py7File by passing  a file path or file object."""
-
         if (isinstance(file_or_path, file) and hasattr(file_or_path, 'name')
                 and os.path.isfile(file_or_path.name)):
             self._filepath = file_or_path.name
@@ -52,7 +55,7 @@ class Py7File(object):
 
     @property
     def location(self):
-        """Absolute path to the folder of the referenced file"""
+        """Absolute path to the folder of the referenced file."""
         return os.path.abspath(os.path.dirname(self._filepath))
 
     @property
@@ -67,7 +70,8 @@ class Py7File(object):
 
     @property
     def zipdir(self):
-        """Absolute path to folder for unzipped version of referenced file."""
+        """Absolute path to folder for unzipped version of referenced file.
+        """
         return os.path.join(self.location, self.trunc + '_unzipped')
 
     def __repr__(self):
@@ -100,17 +104,15 @@ class Py7File(object):
                 data = the_file.read()
         return data
 
-    def get_backups(self):
-        """Return a sorted list of available backups of the referenced file."""
-        return sorted(glob(os.path.join(self.location, (self.trunc +
-                "_backup_" + "*" + self.extension))))
-
     def backup(self):
-        """Create and return a backup with auto incremented version."""
+        """Create a backup with auto incremented version number in filename.
+
+        :rtype: :class:`py7file.Py7File` instance of backup file.
+        """
 
         version = 1
         out_path = os.path.join(self.location, u"{0}{1}{2:03d}".format(
-                            self.trunc, '_backup_', version))
+            self.trunc, '_backup_', version))
 
         if len(self.extension):
             out_path += '.' + self.extension
@@ -118,7 +120,7 @@ class Py7File(object):
         while os.path.isfile(out_path):
             version += 1
             out_path = os.path.join(self.location, u"{0}{1}{2:03d}".format(
-                            self.trunc, '_backup_', version))
+                self.trunc, '_backup_', version))
             if len(self.extension):
                 out_path += '.' + self.extension
 
@@ -133,7 +135,7 @@ class Py7File(object):
     def copy(self, dest, secure=True):
         """Copy file to existing destination directory or filepath.
 
-        Returns a PyFile object for the copied file
+        :rtype: :class:`py7file.Py7File` instance of copied file.
         """
         if secure and os.path.isfile(dest):
             raise IOError('Destination file already exists')
@@ -146,6 +148,8 @@ class Py7File(object):
 
         This deletes the file that the current Py7File object references.
         So it mutates itself to reference the new file and also returns self.
+
+        :rtype: :class:`py7file.Py7File` instance of moved file.
         """
         if secure and os.path.isfile(dest):
             raise IOError('Destination file already exists')
@@ -168,11 +172,59 @@ class Py7File(object):
         if os.path.isdir(self.zipdir):
             shutil.rmtree(self.zipdir, ignore_errors=True)
 
-    def get_sanitized_filename(self):
-        """Return a  portable and secure version of filename
-        credits: werkzeug.utils.secure_filename
+    def get_backups(self):
         """
-        codecs.register_error("replace_", self.replace_under_error_handler)
+        :return: A sorted list of available backups of the referenced file.
+        :rtype: `list`
+        """
+        return sorted(glob(os.path.join(self.location, (self.trunc +
+                                        "_backup_" + "*" + self.extension))))
+
+    def get_filesize(self):
+        """
+        :return: The size of referenced file in bytes.
+        """
+        return os.path.getsize(self.filepath)
+
+    def get_md5(self):
+        """
+        :return: MD5 hash of the file.
+        """
+        file_obj = open(self.filepath, 'rb')
+        md5_caldulator = hashlib.md5()
+        while True:
+            data = file_obj.read(128)
+            if not data:
+                break
+            md5_caldulator.update(data)
+        file_obj.close()
+        return md5_caldulator.hexdigest()
+
+    def get_mimeptype(self):
+        """
+        :return: Mimetype of the file.
+        """
+        return mimetypes.guess_type(self.filename)[0]
+
+    def get_number(self):
+        """Scan filename for numbering.
+
+        :return: The file number as an integer or None
+        :rtype: int, None
+        """
+        number = [n for n in self.trunc if n in string.digits]
+        number = ''.join(number)
+        if number:
+            return int(number)
+        else:
+            return None
+
+    def get_sanitized_filename(self):
+        """Create a sanatized version of the filename.
+
+        :return: Portable and secure version of filename.
+        """
+        codecs.register_error("replace_", self._replace_under_error_handler)
         ascii_strip_re = re.compile(r'[^A-Za-z0-9_.-]')
         windows_device_files = ('CON', 'AUX', 'COM1', 'COM2', 'COM3', 'COM4',
                                 'LPT1', 'LPT2', 'LPT3', 'PRN', 'NUL')
@@ -185,42 +237,13 @@ class Py7File(object):
             if sep:
                 filename = self.filename.replace(sep, ' ')
         filename = str(ascii_strip_re.sub('_', '_'.join(
-                       filename.split()))).strip('._')
+            filename.split()))).strip('._')
 
-        if os.name == 'nt' and filename and \
-            filename.split('.')[0].upper() in windows_device_files:
+        if os.name == 'nt' and filename and\
+           filename.split('.')[0].upper() in windows_device_files:
             filename = '_' + filename
 
         return filename
-
-    def get_mimeptype(self):
-        """Return mimetype of the file."""
-        return mimetypes.guess_type(self.filename)[0]
-
-    def get_md5(self):
-        """Return the MD5 hash of the file."""
-        file_obj = open(self.filepath, 'rb')
-        md5_caldulator = hashlib.md5()
-        while True:
-            data = file_obj.read(128)
-            if not data:
-                break
-            md5_caldulator.update(data)
-        file_obj.close()
-        return md5_caldulator.hexdigest()
-
-    def get_filesize(self):
-        """Return the size of referenced file in bytes."""
-        return os.path.getsize(self.filepath)
-
-    def get_number(self):
-        """Scan filename for number. Return an integer or None"""
-        number = [n for n in self.trunc if n in string.digits]
-        number = ''.join(number)
-        if number:
-            return int(number)
-        else:
-            return None
 
     def unzip(self):
         """Unzip the file to [filebane]_unzipped named subfolder."""
@@ -248,13 +271,19 @@ class Py7File(object):
         self.delete_zip_folder()
 
     def exists(self):
-        """Check if referenced file still exists."""
+        """Check if referenced file still exists.
+
+        :rtype: boolean
+        """
         return os.path.exists(self.filepath)
 
     def is_binary(self):
-        """Return true if the referenced file is binary.
+        """Check if file is binary.
 
-        @attention: not 100% reliable
+        .. warning::
+            not 100% reliable
+
+        :rtype: boolean
 
         """
         the_file = open(self.filepath, 'rb')
@@ -278,10 +307,13 @@ class Py7File(object):
         return False
 
     def is_zip_file(self):
-        """Return true if the referenced file is a zip file"""
+        """Check if the referenced file is a zip file
+
+        :rtype: boolean
+        """
         return zipfile.is_zipfile(self.filepath)
 
-    def replace_under_error_handler(self, error):
+    def _replace_under_error_handler(self, error):
         """Handle encoding errors with '_' replacement"""
         return u'_' * (error.end - error.start), error.end
 
