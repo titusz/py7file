@@ -189,6 +189,14 @@ class Py7FileTest(unittest.TestCase):
         self.assertTrue(os.path.exists(self.test_file_zip))
         self.assertFalse(os.path.isdir('zipfilenoext_unzipped'))
 
+    def test_unzip_returns(self):
+        the_file = Py7File(self.test_file_zip)
+        unzipped = the_file.unzip()
+        filenames = [f.filename for f in unzipped]
+        self.assertEqual(len(filenames), 2)
+        self.assertIn('file_in_root.txt', filenames)
+        self.assertIn('file_in_subfolder.txt', filenames)
+
     def test_special_chars(self):
         the_file = Py7File(self.test_file_utf8)
         the_file.backup()

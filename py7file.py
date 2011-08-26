@@ -246,12 +246,21 @@ class Py7File(object):
         return filename
 
     def unzip(self):
-        """Unzip the file to [filebane]_unzipped named subfolder."""
+        """Unzip the file to [filebane]_unzipped named subfolder.
+
+        :returns: list of Py7File objects for all extracted files
+        """
         zip_file = zipfile.ZipFile(self.filepath)
         try:
             zip_file.extractall(self.zipdir)
         finally:
             zip_file.close()
+        unzipped_files = list()
+        for root, subFolders, files in os.walk(self.zipdir):
+            for f in files:
+                unzipped_files.append(Py7File(os.path.join(root, f)))
+        return unzipped_files
+        
 
     def rezip(self):
         """Re-Zip a previously unzipped file and remove unzipped folder."""
