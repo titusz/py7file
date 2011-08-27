@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import codecs
+from gzip import GzipFile
 import os
 from py7file import Py7File, EpubFile
 import zipfile
@@ -15,6 +16,7 @@ class Py7FileTest(unittest.TestCase):
     def setUp(self):
         """Create some files for testing"""
 
+        #TODO test files pollute src dir... refactor to work in test folder
         self.root = os.path.abspath(os.path.dirname(__file__))
 
         # A normal text file
@@ -43,11 +45,17 @@ class Py7FileTest(unittest.TestCase):
             testfile.write('This is a file for testing')
 
         #Create test zipfile
-        self.test_file_zip = os.path.join(self.root,'zip_test.zip')
+        self.test_file_zip = os.path.join(self.root, 'zip_test.zip')
         zip_file = zipfile.ZipFile(self.test_file_zip, 'w', zipfile.ZIP_DEFLATED)
         zip_file.writestr('file_in_root.txt', 'just a testfile')
         zip_file.writestr('subfolder/file_in_subfolder.txt', 'just a testfile')
         zip_file.close()
+
+        # Create test gz file
+        self.test_file_gz = os.path.join(self.root, 'gz_test.txt.gz')
+        gz_file = GzipFile(self.test_file_gz, 'w')
+        gz_file.write('Test content for gzipped text file')
+        gz_file.close()
 
         #Create test zipfile without extension
         self.test_file_zip_noext = os.path.join(self.root,'zipfilenoext')
@@ -65,6 +73,7 @@ class Py7FileTest(unittest.TestCase):
         os.remove(self.test_file_utf8)
         os.remove(self.test_file_noext)
         os.remove(self.test_file_zip)
+        os.remove(self.test_file_gz)
         os.remove(self.test_file_utf16)
         os.remove(self.test_file_zip_noext)
 
@@ -171,7 +180,7 @@ class Py7FileTest(unittest.TestCase):
         self.assertTrue(the_file.get_filesize())
         self.assertTrue(isinstance(float(the_file.get_filesize()), float))
 
-    def test_zip(self):
+    def test_unzip(self):
         the_file = Py7File(self.test_file_zip)
         the_file.unzip()
         self.assertTrue(os.path.isdir('zip_test_unzipped'))
@@ -180,7 +189,7 @@ class Py7FileTest(unittest.TestCase):
         self.assertTrue(os.path.exists(self.test_file_zip))
         self.assertFalse(os.path.isdir('zip_test_unzipped'))
 
-    def test_zip_noext(self):
+    def test_unzip_noext(self):
         the_file = Py7File(self.test_file_zip_noext)
         the_file.unzip()
         self.assertTrue(os.path.isdir('zipfilenoext_unzipped'))
@@ -196,6 +205,15 @@ class Py7FileTest(unittest.TestCase):
         self.assertEqual(len(filenames), 2)
         self.assertIn('file_in_root.txt', filenames)
         self.assertIn('file_in_subfolder.txt', filenames)
+        the_file.cleanup()
+
+    def test_unzip_gz(self):
+        the_file = Py7File(self.test_file_gz)
+        unzipped = the_file.unzip()
+        filenames = [f.filename for f in unzipped]
+        self.assertEqual(len(filenames), 1)
+        self.assertIn('gz_test.txt', filenames)
+        the_file.cleanup()
 
     def test_special_chars(self):
         the_file = Py7File(self.test_file_utf8)

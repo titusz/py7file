@@ -13,6 +13,7 @@ operations on files
 """
 import codecs
 from glob import glob
+import gzip
 
 import os
 import re
@@ -246,19 +247,34 @@ class Py7File(object):
         return filename
 
     def unzip(self):
-        """Unzip the file to [filebane]_unzipped named subfolder.
+        """Unzip the file to [filename]_unzipped named subfolder.
 
         :returns: list of Py7File objects for all extracted files
         """
-        zip_file = zipfile.ZipFile(self.filepath)
-        try:
-            zip_file.extractall(self.zipdir)
-        finally:
-            zip_file.close()
         unzipped_files = list()
-        for root, subFolders, files in os.walk(self.zipdir):
-            for f in files:
-                unzipped_files.append(Py7File(os.path.join(root, f)))
+        if self.extension in ['zip','epub','']:
+            zip_file = zipfile.ZipFile(self.filepath)
+            try:
+                zip_file.extractall(self.zipdir)
+            finally:
+                zip_file.close()
+
+            for root, subFolders, files in os.walk(self.zipdir):
+                for f in files:
+                    unzipped_files.append(Py7File(os.path.join(root, f)))
+        elif self.extension == 'gz':
+            gz_file = gzip.GzipFile(self.filepath, 'rb')
+            if not os.path.isdir(self.zipdir):
+                os.mkdir(self.zipdir)
+            outpath = os.path.join(self.zipdir, self.trunc)
+            unzipped_file = file(outpath, 'wb')
+            while 1:
+                lines = gz_file.readline()
+                if lines == '': break
+                unzipped_file.write(lines)
+            gz_file.close()
+            unzipped_file.close()
+            unzipped_files.append(Py7File(outpath))
         return unzipped_files
         
 
