@@ -6,7 +6,7 @@ README = open(os.path.join(here, 'README.rst')).read()
 NEWS = open(os.path.join(here, 'NEWS.txt')).read()
 
 
-version = '0.7.2'
+version = '0.7.3'
 
 setup(name='py7file',
     version=version,
