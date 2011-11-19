@@ -1,6 +1,13 @@
 News
 ====
 
+master
+-----
+
+* .unzip() can now handle gzipped files transparently
+
+* .unzip() now returns a list containing all extracted files as Py7File objects
+
 0.7.2
 -----
 

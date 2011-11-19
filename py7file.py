@@ -23,6 +23,7 @@ import mimetypes
 import string
 import zipfile
 import filecmp
+import sys
 
 
 class Py7File(object):
@@ -47,7 +48,10 @@ class Py7File(object):
     @property
     def filepath(self):
         """Absolute path to the referenced file."""
-        return unicode(os.path.abspath(self._filepath))
+        if not isinstance(self._filepath, unicode):
+            return unicode(os.path.abspath(self._filepath), sys.getfilesystemencoding())
+        else:
+            return os.path.abspath(self._filepath)
 
     @property
     def filename(self):
@@ -252,7 +256,7 @@ class Py7File(object):
         :returns: list of Py7File objects for all extracted files
         """
         unzipped_files = list()
-        if self.extension in ['zip','epub','']:
+        if self.extension in ['zip', 'epub', '']:
             zip_file = zipfile.ZipFile(self.filepath)
             try:
                 zip_file.extractall(self.zipdir)
@@ -270,16 +274,17 @@ class Py7File(object):
             unzipped_file = file(outpath, 'wb')
             while 1:
                 lines = gz_file.readline()
-                if lines == '': break
+                if lines == '':
+                    break
                 unzipped_file.write(lines)
             gz_file.close()
             unzipped_file.close()
             unzipped_files.append(Py7File(outpath))
         return unzipped_files
-        
 
     def rezip(self):
         """Re-Zip a previously unzipped file and remove unzipped folder."""
+        #TODO need special handling for .gz files
         fzip = zipfile.ZipFile(self.filepath, 'w', zipfile.ZIP_DEFLATED)
         if not os.path.isdir(self.zipdir):
             raise IOError('No "{}" folder to rezip'.format(self.trunc))
