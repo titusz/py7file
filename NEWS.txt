@@ -1,6 +1,11 @@
 News
 ====
 
+0.7.4
+-----
+
+* fixed get_md5 to use internal filepath
+
 0.7.3
 -----
 

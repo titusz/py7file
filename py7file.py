@@ -195,7 +195,7 @@ class Py7File(object):
         """
         :return: MD5 hash of the file.
         """
-        file_obj = open(self.filepath, 'rb')
+        file_obj = open(self._filepath, 'rb')
         md5_caldulator = hashlib.md5()
         while True:
             data = file_obj.read(128)
