@@ -1,0 +1,110 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Py7file by titusz</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="javascripts/scale.fix.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Py7file</h1>
+<p>Py7File - Simple file handling with python</p>
+        <p class="view"><a href="https://github.com/titusz/py7file">View the Project on GitHub <small>titusz/py7file</small></a></p>
+        <ul>
+          <li><a href="https://github.com/titusz/py7file/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/titusz/py7file/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/titusz/py7file">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>Py7File - Simple file handling with python</h1>
+
+<p><em>Py7File wraps and unifies the python stdlib file handling modules with a simple</em>
+<em>and intuitive high-level api.</em></p>
+
+<ul>
+<li>
+<strong>Think</strong>: os.path, shutil etc. via object based method access.</li>
+<li>
+<strong>Author</strong>: Titusz </li>
+<li>
+<strong>PyPi</strong>: <a href="http://pypi.python.org/pypi/py7file">http://pypi.python.org/pypi/py7file</a></li>
+<li>
+<strong>Source Code</strong>: <a href="http://github.com/titusz/py7file">http://github.com/titusz/py7file</a></li>
+<li>
+<strong>License</strong>: BSD</li>
+</ul><h2>Installation</h2>
+
+<p>Use easy_install or pip:</p>
+
+<pre><code>pip install py7file
+</code></pre>
+
+<h2>Usage</h2>
+
+<p>Here some hopefully self explaining examples of Py7File usage:</p>
+
+<pre><code>from py7file import Py7File
+
+the_file = Py7File('a_file.txt')
+
+# Copy and Move
+copied_file = the_file.copy('d_file.txt')  # copied_file is also a Py7file
+the_file.move('moved_file.txt')  # moves the file and mutates the reference
+
+# Backup and Restore
+the_file.backup()  # creates a_file_backup_001.txt
+the_file.backup()  # creates a_file_backup_002.txt
+the_file.delete()  # removes a_file.txt from disk (ups...)
+the_file.restore() # recovers file from a_file_backup_002.txt
+
+# Unzip and Rezip
+zfile = Py7File('a_file.zip')
+zfile.unzip() # creates a folder a_file_unzipped with contents of zipfile
+zfile.rezip() # repackages subfolder a_file_unzipped to a_file.zip
+</code></pre>
+
+<p>See test_py7file.py for more examples.</p>
+
+<h2>Testing</h2>
+
+<p>Py7File is tested against python 2.6 and 2.7</p>
+
+<p>To run the tests:</p>
+
+<pre><code>python test_py7file.py
+</code></pre>
+
+<h2>Status</h2>
+
+<p>Well I am using this this file handling library quite extensivly myself and
+i got no complaints so far ;). Still please consider this Beta and
+use at your own risk...</p>
+
+<h2>Background</h2>
+
+<p>As I started learning programming with python I found the different modules for
+handling files very confusing and cumbersome to use. While writing my first
+scripts I found myself writing os.path.join(...) way to often. I still
+keep mixing up os and shutil based file operations like copy, move, rename.
+So I started this little module to make things easier...</p>
+      </section>
+    </div>
+    <footer>
+      <p>Project maintained by <a href="https://github.com/titusz">titusz</a></p>
+      <p>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></p>
+    </footer>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>
